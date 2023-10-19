@@ -1,0 +1,11 @@
+E:\CaptureTheFlagPrototype\bin\Debug\CaptureTheFlagPrototype.exe.config
+E:\CaptureTheFlagPrototype\bin\Debug\CaptureTheFlagPrototype.exe
+E:\CaptureTheFlagPrototype\bin\Debug\CaptureTheFlagPrototype.pdb
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.csproj.AssemblyReference.cache
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.csproj.SuggestedBindingRedirects.cache
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.Form1.resources
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.Properties.Resources.resources
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.csproj.GenerateResource.cache
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.csproj.CoreCompileInputs.cache
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.exe
+E:\CaptureTheFlagPrototype\obj\Debug\CaptureTheFlagPrototype.pdb
