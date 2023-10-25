@@ -10,6 +10,6 @@ Software Engineering 2 Project Code Repository, a software written in C# providi
 - Haoming Xu [@dlsxhm1](https://github.com/AlmostSavage)
 ## Documentation
 
-[Software Requirements Specification (SRS)](https://github.com/AlmostSavage/CTF-Capture-the-Flag-Assignment/blob/main/Documents/CTF_SRS.docx)
+[Software Requirements Specification (SRS)](https://github.com/AlmostSavage/CTF-Capture-the-Flag-Assignment/blob/main/Documents/CTF_SRS.pdf)
 
-[Project Description](https://github.com/AlmostSavage/CTF-Capture-the-Flag-Assignment/blob/main/Documents/CTF_Project_Description.docx)
+[Project Description](https://github.com/AlmostSavage/CTF-Capture-the-Flag-Assignment/blob/main/Documents/CTF_Project_Description.pdf)
