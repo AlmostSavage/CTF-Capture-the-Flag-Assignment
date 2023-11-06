@@ -1,0 +1,17 @@
+E:\CTFPrototype\bin\Debug\CTFPrototype.exe.config
+E:\CTFPrototype\bin\Debug\CTFPrototype.exe
+E:\CTFPrototype\bin\Debug\CTFPrototype.pdb
+E:\CTFPrototype\obj\Debug\CTFPrototype.csproj.AssemblyReference.cache
+E:\CTFPrototype\obj\Debug\CTFPrototype.csproj.SuggestedBindingRedirects.cache
+E:\CTFPrototype\obj\Debug\CTFPrototype.Binary_Exploitation.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Cryptography.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Forensics.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Form1.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Properties.Resources.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Reverse_Engineering.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Tabs.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.Web_Exploitation.resources
+E:\CTFPrototype\obj\Debug\CTFPrototype.csproj.GenerateResource.cache
+E:\CTFPrototype\obj\Debug\CTFPrototype.csproj.CoreCompileInputs.cache
+E:\CTFPrototype\obj\Debug\CTFPrototype.exe
+E:\CTFPrototype\obj\Debug\CTFPrototype.pdb
