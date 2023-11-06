@@ -12,6 +12,9 @@ namespace CTFPrototype
 {
     public partial class Tabs : Form
     {
+
+        private int points = 0;
+        
         Timer timer = new Timer();
         private int countdownSeconds = 1800;
         private Timer countdownTimer = new Timer();
@@ -29,34 +32,40 @@ namespace CTFPrototype
             StartCountdown();
         }
 
+        public void AddPoints(int pointsToAdd)
+        {
+            points += pointsToAdd;
+            pointsLabel.Text = "Points: " + points; // Update the label to display the updated points
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Forensics form2 = new Forensics();
+            Forensics form2 = new Forensics(this);
             form2.ShowDialog();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Cryptography form2 = new Cryptography();
+            Cryptography form2 = new Cryptography(this);
             form2.ShowDialog();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Web_Exploitation form2 = new Web_Exploitation();
+            Web_Exploitation form2 = new Web_Exploitation(this);
             form2.ShowDialog();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Reverse_Engineering form2 = new Reverse_Engineering();
+            Reverse_Engineering form2 = new Reverse_Engineering(this);
             form2.ShowDialog();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Binary_Exploitation form2 = new Binary_Exploitation();
+            Binary_Exploitation form2 = new Binary_Exploitation(this);
             form2.ShowDialog();
         }
 
@@ -93,6 +102,11 @@ namespace CTFPrototype
         {
             // Update the Label to display the remaining time
             TimeKeeper.Text = $"Time Left: {countdownSeconds} seconds";
+        }
+
+        private void PointTracker_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

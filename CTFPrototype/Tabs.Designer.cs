@@ -36,6 +36,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.TimeKeeper = new System.Windows.Forms.Label();
+            this.pointsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -102,11 +103,22 @@
             this.TimeKeeper.TabIndex = 5;
             this.TimeKeeper.Text = "label1";
             // 
+            // pointsLabel
+            // 
+            this.pointsLabel.AutoSize = true;
+            this.pointsLabel.Location = new System.Drawing.Point(41, 429);
+            this.pointsLabel.Name = "pointsLabel";
+            this.pointsLabel.Size = new System.Drawing.Size(35, 13);
+            this.pointsLabel.TabIndex = 6;
+            this.pointsLabel.Text = "label1";
+            this.pointsLabel.Click += new System.EventHandler(this.PointTracker_Click);
+            // 
             // Tabs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.pointsLabel);
             this.Controls.Add(this.TimeKeeper);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -129,5 +141,6 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label TimeKeeper;
+        private System.Windows.Forms.Label pointsLabel;
     }
 }
