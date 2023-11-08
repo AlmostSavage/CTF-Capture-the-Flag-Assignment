@@ -105,4 +105,8 @@ C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\Database.mdf
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\Database_log.ldf
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Login.resources
-C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Main.resources
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.StudentMain.resources
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\BCrypt.Net-Next.dll
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\BCrypt.Net-Next.xml
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Signup.resources
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.InstructorMain.resources

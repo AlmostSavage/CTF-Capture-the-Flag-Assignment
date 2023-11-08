@@ -1,6 +1,6 @@
 ﻿namespace CTFPrototype
 {
-    partial class Main
+    partial class StudentMain
     {
         /// <summary>
         /// Required designer variable.

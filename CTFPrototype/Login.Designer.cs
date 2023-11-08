@@ -28,41 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxUsername = new System.Windows.Forms.TextBox();
-            this.textBoxPassword = new System.Windows.Forms.MaskedTextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.usernameBox = new System.Windows.Forms.TextBox();
+            this.passwordBox = new System.Windows.Forms.MaskedTextBox();
+            this.loginButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // textBoxUsername
+            // usernameBox
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(289, 132);
-            this.textBoxUsername.Name = "textBoxUsername";
-            this.textBoxUsername.Size = new System.Drawing.Size(295, 21);
-            this.textBoxUsername.TabIndex = 0;
-            this.textBoxUsername.Text = "Username";
-            this.textBoxUsername.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.usernameBox.Location = new System.Drawing.Point(289, 132);
+            this.usernameBox.Name = "usernameBox";
+            this.usernameBox.Size = new System.Drawing.Size(295, 21);
+            this.usernameBox.TabIndex = 0;
+            this.usernameBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // textBoxPassword
+            // passwordBox
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(289, 215);
-            this.textBoxPassword.Name = "textBoxPassword";
-            this.textBoxPassword.PasswordChar = '*';
-            this.textBoxPassword.Size = new System.Drawing.Size(295, 21);
-            this.textBoxPassword.TabIndex = 1;
-            this.textBoxPassword.Text = "Password";
+            this.passwordBox.Location = new System.Drawing.Point(289, 215);
+            this.passwordBox.Name = "passwordBox";
+            this.passwordBox.PasswordChar = '*';
+            this.passwordBox.Size = new System.Drawing.Size(295, 21);
+            this.passwordBox.TabIndex = 1;
             // 
-            // button1
+            // loginButton
             // 
-            this.button1.Location = new System.Drawing.Point(289, 402);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(180, 40);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Begin";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.loginButton.Location = new System.Drawing.Point(289, 402);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(180, 40);
+            this.loginButton.TabIndex = 2;
+            this.loginButton.Text = "Begin";
+            this.loginButton.UseVisualStyleBackColor = true;
+            this.loginButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // label1
             // 
@@ -102,11 +100,12 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBoxPassword);
-            this.Controls.Add(this.textBoxUsername);
+            this.Controls.Add(this.loginButton);
+            this.Controls.Add(this.passwordBox);
+            this.Controls.Add(this.usernameBox);
             this.Name = "Login";
-            this.Text = "Form1";
+            this.Text = "Login";
+            this.Load += new System.EventHandler(this.Login_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -114,9 +113,9 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxUsername;
-        private System.Windows.Forms.MaskedTextBox textBoxPassword;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox usernameBox;
+        private System.Windows.Forms.MaskedTextBox passwordBox;
+        private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

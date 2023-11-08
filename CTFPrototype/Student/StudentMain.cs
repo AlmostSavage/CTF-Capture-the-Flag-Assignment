@@ -11,17 +11,25 @@ using System.Windows.Forms;
 
 namespace CTFPrototype
 {
-    public partial class Main : Form
+    public partial class StudentMain : Form
     {
         string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+#pragma warning disable CS0414 // 字段“Main.points”已被赋值，但从未使用过它的值
         private int points = 0;
+#pragma warning restore CS0414 // 字段“Main.points”已被赋值，但从未使用过它的值
         
         Timer timer = new Timer();
+        private TeamInfo teamInfo;
         private int countdownSeconds = 1800;
         private Timer countdownTimer = new Timer();
-        public Main()
+
+        private int userID;
+        public StudentMain(int userID)
         {
             InitializeComponent();
+
+            this.userID = userID;
+            this.Load += new EventHandler(StudentMain_Load);
 
             // Event handler for 5 buttons
             this.forensicsButton.Click += new System.EventHandler(this.CategoryButton_Click);
@@ -39,9 +47,6 @@ namespace CTFPrototype
             // Submit button handler
             this.submitButton.Click += new EventHandler(this.submitButton_Click);
 
-            // Startup Handler
-            this.Load += new EventHandler(MainForm_Load);
-
             // Timer initialize
             timer.Interval = 1800000; // 1,800,000 milliseconds (30 minutes)
             timer.Enabled = true;
@@ -52,19 +57,63 @@ namespace CTFPrototype
 
             StartCountdown();
         }
-
-        // Get Team ID for Points & Ranking purpose
-        private void MainForm_Load(object sender, EventArgs e)
+        private void StudentMain_Load(object sender, EventArgs e)
         {
-            int teamId = GetTeamId();
-            UpdatePointsLabel(teamId);
+            // Retrieve the team information when the form loads
+            TeamInfo teamInfo = GetTeamInfo();
+
+            // Now you can access the TeamID, TeamName, and Points from teamInfo
+            int teamID = teamInfo.TeamID;
+            string teamName = teamInfo.TeamName;
+            int points = teamInfo.Points;
+
+            this.teamInfo = GetTeamInfo();
+            UpdatePointsLabel(teamID);
+            //lblTeamName.Text = teamName; // Assuming you have a label to display the team name
+            //lblPoints.Text = points.ToString(); // And a label to display the points
         }
 
-        private int GetTeamId()
+        public struct TeamInfo
         {
-            return 1; // Dummy value for demonstration
+            public int TeamID;
+            public string TeamName;
+            public int Points;
         }
 
+        private TeamInfo GetTeamInfo()
+        {
+            TeamInfo teamInfo = new TeamInfo { TeamID = -1, TeamName = string.Empty, Points = 0 };
+
+            // SQL query to fetch the TeamID, TeamName, and Points for the current user's team.
+            string query = @"
+            SELECT t.TeamID, t.TeamName, t.Points 
+            FROM Users u 
+            INNER JOIN Teams t ON u.TeamID = t.TeamID 
+            WHERE u.UserID = @UserId";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read()) // If we have a result, populate the TeamInfo struct
+                        {
+                            teamInfo.TeamID = reader.IsDBNull(reader.GetOrdinal("TeamID")) ? -1 : reader.GetInt32(reader.GetOrdinal("TeamID"));
+                            teamInfo.TeamName = reader.IsDBNull(reader.GetOrdinal("TeamName")) ? string.Empty : reader.GetString(reader.GetOrdinal("TeamName"));
+                            teamInfo.Points = reader.IsDBNull(reader.GetOrdinal("Points")) ? 0 : reader.GetInt32(reader.GetOrdinal("Points"));
+                        }
+                    }
+                }
+            }
+
+            return teamInfo;
+        }
+        
         public void AddPoints(int pointsToAdd, int teamID, string reason)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -116,47 +165,48 @@ namespace CTFPrototype
                     }
                 }
             }
-
-
-            /*
-            points += pointsToAdd;
-            pointsLabel.Text = "Points: " + points; // Update the label to display the updated points
-            */
         }
 
         
         // Point Label Handler
         private void UpdatePointsLabel(int teamId)
         {
-            // Assume this method is part of a form and pointsLabel is a control on that form.
-            // This method should run on the UI thread because it interacts with the UI.
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True"; // Replace with your actual connection string
+            string query = "SELECT Points FROM Teams WHERE TeamID = @TeamId";
 
-            if (InvokeRequired)
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // If the current thread is not the UI thread, invoke the update on the UI thread
-                Invoke(new Action(() => UpdatePointsLabel(teamId)));
-                return;
-            }
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string selectPointsQuery = "SELECT Points FROM Teams WHERE TeamID = @teamId";
-
-                using (SqlCommand cmd = new SqlCommand(selectPointsQuery, conn))
+                try
                 {
-                    cmd.Parameters.AddWithValue("@teamId", teamId);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        if (reader.Read())
+                        // Use parameters to prevent SQL injection
+                        command.Parameters.AddWithValue("@TeamId", teamId);
+
+                        object result = command.ExecuteScalar();
+
+                        if (result != null && result != DBNull.Value)
                         {
-                            pointsLabel.Text = $"Points: {reader["Points"].ToString()}";
+                            // Update the points label with the points from the database
+                            pointsLabel.Text = $"Points: {result}";
+                        }
+                        else
+                        {
+                            // Handle the case where there is no result (e.g., invalid teamId)
+                            pointsLabel.Text = "Points: N/A";
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions, possibly log them and inform the user
+                    MessageBox.Show($"An error occurred while retrieving points: {ex.Message}");
+                }
             }
         }
-
+        
         // Event handler for all category buttons
         private void CategoryButton_Click(object sender, EventArgs e)
         {
@@ -254,7 +304,7 @@ namespace CTFPrototype
             }
             UpdatePointsLabel(1);
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -289,6 +339,7 @@ namespace CTFPrototype
         {
 
         }
+        
 
         private void StartCountdown()
         {
