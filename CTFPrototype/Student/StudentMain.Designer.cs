@@ -40,6 +40,8 @@
             this.questionBox = new System.Windows.Forms.TextBox();
             this.answerBox = new System.Windows.Forms.TextBox();
             this.submitButton = new System.Windows.Forms.Button();
+            this.logoutButton = new System.Windows.Forms.Button();
+            this.rankButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // forensicsButton
@@ -100,11 +102,11 @@
             // 
             this.TimeKeeper.AutoSize = true;
             this.TimeKeeper.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TimeKeeper.Location = new System.Drawing.Point(587, 442);
+            this.TimeKeeper.Location = new System.Drawing.Point(313, 444);
             this.TimeKeeper.Name = "TimeKeeper";
-            this.TimeKeeper.Size = new System.Drawing.Size(43, 14);
+            this.TimeKeeper.Size = new System.Drawing.Size(49, 14);
             this.TimeKeeper.TabIndex = 5;
-            this.TimeKeeper.Text = "label1";
+            this.TimeKeeper.Text = "Time: 0";
             // 
             // pointsLabel
             // 
@@ -146,11 +148,33 @@
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Visible = false;
             // 
-            // Main
+            // logoutButton
+            // 
+            this.logoutButton.Location = new System.Drawing.Point(649, 433);
+            this.logoutButton.Name = "logoutButton";
+            this.logoutButton.Size = new System.Drawing.Size(94, 35);
+            this.logoutButton.TabIndex = 10;
+            this.logoutButton.Text = "Log out";
+            this.logoutButton.UseVisualStyleBackColor = true;
+            this.logoutButton.Click += new System.EventHandler(this.logoutButton_Click);
+            // 
+            // rankButton
+            // 
+            this.rankButton.Location = new System.Drawing.Point(468, 433);
+            this.rankButton.Name = "rankButton";
+            this.rankButton.Size = new System.Drawing.Size(104, 35);
+            this.rankButton.TabIndex = 11;
+            this.rankButton.Text = "Ranking";
+            this.rankButton.UseVisualStyleBackColor = true;
+            this.rankButton.Click += new System.EventHandler(this.rankButton_Click_1);
+            // 
+            // StudentMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 518);
+            this.Controls.Add(this.rankButton);
+            this.Controls.Add(this.logoutButton);
             this.Controls.Add(this.submitButton);
             this.Controls.Add(this.answerBox);
             this.Controls.Add(this.questionBox);
@@ -161,7 +185,7 @@
             this.Controls.Add(this.webButton);
             this.Controls.Add(this.cryptographyButton);
             this.Controls.Add(this.forensicsButton);
-            this.Name = "Main";
+            this.Name = "StudentMain";
             this.Text = "Capture The Flag (CTF) Practice";
             this.Load += new System.EventHandler(this.Tabs_Load);
             this.ResumeLayout(false);
@@ -182,5 +206,7 @@
         private System.Windows.Forms.TextBox questionBox;
         private System.Windows.Forms.TextBox answerBox;
         private System.Windows.Forms.Button submitButton;
+        private System.Windows.Forms.Button logoutButton;
+        private System.Windows.Forms.Button rankButton;
     }
 }

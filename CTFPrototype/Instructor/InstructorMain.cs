@@ -12,10 +12,12 @@ namespace CTFPrototype.Instructor
 {
     public partial class InstructorMain : Form
     {
+        private readonly Login loginForm;
         private int userID;
-        public InstructorMain(int userID)
+        public InstructorMain(Login login, int userID)
         {
             InitializeComponent();
+            this.loginForm = login;
             this.userID = userID;
         }
 

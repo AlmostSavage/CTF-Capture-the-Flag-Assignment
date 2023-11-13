@@ -14,22 +14,24 @@ namespace CTFPrototype
     public partial class StudentMain : Form
     {
         string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
-#pragma warning disable CS0414 // 字段“Main.points”已被赋值，但从未使用过它的值
         private int points = 0;
-#pragma warning restore CS0414 // 字段“Main.points”已被赋值，但从未使用过它的值
-        
+        private readonly Login loginForm;
+
         Timer timer = new Timer();
         private TeamInfo teamInfo;
         private int countdownSeconds = 1800;
         private Timer countdownTimer = new Timer();
 
         private int userID;
-        public StudentMain(int userID)
+        public StudentMain(Login login, int userID)
         {
             InitializeComponent();
 
+            this.loginForm = login;
             this.userID = userID;
             this.Load += new EventHandler(StudentMain_Load);
+
+            this.FormClosed += (sender, args) => Application.Exit();
 
             // Event handler for 5 buttons
             this.forensicsButton.Click += new System.EventHandler(this.CategoryButton_Click);
@@ -55,22 +57,20 @@ namespace CTFPrototype
             countdownTimer.Interval = 1000;
             countdownTimer.Tick += CountdownTimer_Tick;
 
-            StartCountdown();
         }
         private void StudentMain_Load(object sender, EventArgs e)
         {
             // Retrieve the team information when the form loads
             TeamInfo teamInfo = GetTeamInfo();
 
-            // Now you can access the TeamID, TeamName, and Points from teamInfo
             int teamID = teamInfo.TeamID;
             string teamName = teamInfo.TeamName;
             int points = teamInfo.Points;
 
             this.teamInfo = GetTeamInfo();
             UpdatePointsLabel(teamID);
-            //lblTeamName.Text = teamName; // Assuming you have a label to display the team name
-            //lblPoints.Text = points.ToString(); // And a label to display the points
+
+            TimeKeeper.Visible = false;
         }
 
         public struct TeamInfo
@@ -113,9 +113,11 @@ namespace CTFPrototype
 
             return teamInfo;
         }
-        
-        public void AddPoints(int pointsToAdd, int teamID, string reason)
+
+        public void AddPoints(int questionId, int teamID)
         {
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -125,12 +127,25 @@ namespace CTFPrototype
                 {
                     try
                     {
+                        // Fetch points worth from the Questions table
+                        string fetchPointsQuery = "SELECT PointsWorth FROM Questions WHERE QuestionID = @QuestionId";
+                        int pointsToAdd = 0;
+                        using (SqlCommand cmd = new SqlCommand(fetchPointsQuery, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@QuestionId", questionId);
+                            object result = cmd.ExecuteScalar();
+                            if (result != null)
+                            {
+                                pointsToAdd = Convert.ToInt32(result);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("Question ID not found.");
+                            }
+                        }
+
                         // Update the Teams table
-                        string updatePointsQuery = @"
-                    UPDATE Teams 
-                    SET Points = Points + @pointsToAdd 
-                    WHERE TeamID = @teamId;
-                ";
+                        string updatePointsQuery = "UPDATE Teams SET Points = Points + @pointsToAdd WHERE TeamID = @teamId";
                         using (SqlCommand cmd = new SqlCommand(updatePointsQuery, conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@pointsToAdd", pointsToAdd);
@@ -139,15 +154,11 @@ namespace CTFPrototype
                         }
 
                         // Insert a record into the ScoreTransactions table
-                        string insertTransactionQuery = @"
-                    INSERT INTO ScoreTransactions (TeamID, PointsChanged, Reason) 
-                    VALUES (@teamId, @pointsToAdd, @reason);
-                ";
+                        string insertTransactionQuery = "INSERT INTO ScoreTransactions (TeamID, PointsChanged, Reason) VALUES (@teamId, @pointsToAdd, 'Answered Question')";
                         using (SqlCommand cmd = new SqlCommand(insertTransactionQuery, conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@teamId", teamID);
                             cmd.Parameters.AddWithValue("@pointsToAdd", pointsToAdd);
-                            cmd.Parameters.AddWithValue("@reason", reason);
                             cmd.ExecuteNonQuery();
                         }
 
@@ -157,21 +168,21 @@ namespace CTFPrototype
                         // Reflect the change on the pointsLabel
                         UpdatePointsLabel(teamID);
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         // If an error occurs, roll back the transaction
                         transaction.Rollback();
-                        throw;
+                        MessageBox.Show("An error occurred: " + ex.Message);
                     }
                 }
             }
         }
 
-        
+
         // Point Label Handler
         private void UpdatePointsLabel(int teamId)
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True"; // Replace with your actual connection string
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
             string query = "SELECT Points FROM Teams WHERE TeamID = @TeamId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -206,7 +217,13 @@ namespace CTFPrototype
                 }
             }
         }
-        
+
+        private void StartTimer()
+        {
+            countdownSeconds = 1800; // Reset countdown time to 30 minutes
+            countdownTimer.Start();
+        }
+
         // Event handler for all category buttons
         private void CategoryButton_Click(object sender, EventArgs e)
         {
@@ -226,6 +243,10 @@ namespace CTFPrototype
                 submitButton.Enabled = true;
                 // Remember to clear the answer text box each time
                 answerBox.Text = "";
+
+                // Show and start timer
+                TimeKeeper.Visible = true;
+                StartTimer();
             }
             else
             {
@@ -283,13 +304,14 @@ namespace CTFPrototype
         {
             string userAnswer = answerBox.Text.Trim(); // Get user's answer and trim it
 
+            // Retrieve the current user's team information
+            TeamInfo userTeamInfo = GetTeamInfo(); // Fetches team info based on the class-level userID
+
             // Check if the answer is correct
             if (!string.IsNullOrEmpty(userAnswer) && userAnswer.Equals(currentQuestion.AnswerText, StringComparison.OrdinalIgnoreCase))
             {
-                // Add points to the team's score
-                AddPoints(currentQuestion.PointsWorth, 1, "Answer Question");
-
-                // Show congratulation message
+                // Add points to the user's team score for the current question
+                AddPoints(currentQuestion.QuestionID, userTeamInfo.TeamID);
                 MessageBox.Show("Congratulations! You've earned " + currentQuestion.PointsWorth + " points.", "Correct Answer", MessageBoxButtons.OK);
 
                 // After closing the MessageBox, refresh the question
@@ -299,12 +321,12 @@ namespace CTFPrototype
             {
                 // If the answer is incorrect, inform the user
                 MessageBox.Show("Incorrect answer. Try again!", "Wrong Answer", MessageBoxButtons.OK);
-                // Optionally clear the answer box
-                answerBox.Text = "";
             }
-            UpdatePointsLabel(1);
+
+            // Update the points label for the user's team
+            UpdatePointsLabel(userTeamInfo.TeamID);
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -332,7 +354,16 @@ namespace CTFPrototype
         
         private void timer1_Tick(object sender, EventArgs e)
         {
-            this.Close();
+            // Stop the timer
+            countdownTimer.Stop();
+
+            // Disable text fields and the submit button
+            questionBox.Enabled = false;
+            answerBox.Enabled = false;
+            submitButton.Enabled = false;
+
+            // Show a message to the user
+            MessageBox.Show("Time is up!");
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -340,11 +371,12 @@ namespace CTFPrototype
 
         }
         
-
+        /*
         private void StartCountdown()
         {
             countdownTimer.Start();
         }
+        */
 
         private void CountdownTimer_Tick(object sender, EventArgs e)
         {
@@ -379,6 +411,21 @@ namespace CTFPrototype
         private void questionBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void logoutButton_Click(object sender, EventArgs e)
+        {
+            loginForm.ClearPassword();
+            loginForm.Show();
+
+            // Close the current (StudentMain) form
+            this.Hide();
+        }
+
+        private void rankButton_Click_1(object sender, EventArgs e)
+        {
+            TeamRankingForm rankingForm = new TeamRankingForm();
+            rankingForm.ShowDialog();
         }
     }
 }

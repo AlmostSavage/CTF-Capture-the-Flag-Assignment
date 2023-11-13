@@ -15,7 +15,6 @@ using BCrypt.Net;
 namespace CTFPrototype
 {
     public partial class Login : Form
-
     {
         private const string CorrectUsername = "admin";
         private const string CorrectPassword = "password";
@@ -60,17 +59,27 @@ namespace CTFPrototype
                             if (BCrypt.Net.BCrypt.Verify(enteredPassword, storedPasswordHash))
                             {
                                 this.Hide(); // Hide the login form.
+                                Form mainForm = null;
+
                                 if (roleID == 1)
                                 {
-                                    InstructorMain instructorForm = new InstructorMain(userID);
-                                    instructorForm.ShowDialog();
+                                    mainForm = new InstructorMain(this, userID);
                                 }
                                 else if (roleID == 2)
                                 {
-                                    StudentMain studentForm = new StudentMain(userID);
-                                    studentForm.ShowDialog();
+                                    mainForm = new StudentMain(this, userID);
                                 }
-                                this.Close(); // Close the login form after the main form is closed.
+
+                                if (mainForm != null)
+                                {
+                                    mainForm.Show();
+                                }
+                                else
+                                {
+                                    // Handle invalid roleID or other issues
+                                    MessageBox.Show("Invalid role or user configuration. Please contact support.");
+                                    this.Show(); // Show the login form again if there's an issue
+                                }
                             }
                             else
                             {
@@ -85,12 +94,11 @@ namespace CTFPrototype
                 }
             }
         }
-        /*
-        private bool VerifyPasswordHash(string enteredPassword, String storedPasswordHash)
+
+        public void ClearPassword()
         {
-            return BCrypt.Net.BCrypt.Verify(enteredPassword, storedPasswordHash);
+            passwordBox.Text = string.Empty;
         }
-        */
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -100,20 +108,6 @@ namespace CTFPrototype
         private void button1_Click(object sender, EventArgs e)
         {
             AuthenticateUser();
-            /*
-            string enteredUsername = usernameBox.Text;
-            string enteredPassword = passwordBox.Text;
-
-            if (enteredUsername == CorrectUsername && enteredPassword == CorrectPassword)
-            {
-                StudentMain form2 = new StudentMain();
-                form2.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("Incorrect Username or Password. Please try Again.");
-            }
-            */
         }
 
         private void Login_Load(object sender, EventArgs e)
