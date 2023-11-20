@@ -13,7 +13,9 @@ namespace CTFPrototype
 {
     public partial class StudentMain : Form
     {
+        // Connect database
         string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+
         private int points = 0;
         private readonly Login loginForm;
 
@@ -31,6 +33,7 @@ namespace CTFPrototype
             this.userID = userID;
             this.Load += new EventHandler(StudentMain_Load);
 
+            // Terminate the program when form closed
             this.FormClosed += (sender, args) => Application.Exit();
 
             // Event handler for 5 buttons
@@ -50,10 +53,6 @@ namespace CTFPrototype
             this.submitButton.Click += new EventHandler(this.submitButton_Click);
 
             // Timer initialize
-            timer.Interval = 1800000; // 1,800,000 milliseconds (30 minutes)
-            timer.Enabled = true;
-            timer.Tick += timer1_Tick;
-
             countdownTimer.Interval = 1000;
             countdownTimer.Tick += CountdownTimer_Tick;
 
@@ -84,7 +83,7 @@ namespace CTFPrototype
         {
             TeamInfo teamInfo = new TeamInfo { TeamID = -1, TeamName = string.Empty, Points = 0 };
 
-            // SQL query to fetch the TeamID, TeamName, and Points for the current user's team.
+            // Fetch the TeamID, TeamName, and Points for the current user's team.
             string query = @"
             SELECT t.TeamID, t.TeamName, t.Points 
             FROM Users u 
@@ -101,7 +100,7 @@ namespace CTFPrototype
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        if (reader.Read()) // If we have a result, populate the TeamInfo struct
+                        if (reader.Read())
                         {
                             teamInfo.TeamID = reader.IsDBNull(reader.GetOrdinal("TeamID")) ? -1 : reader.GetInt32(reader.GetOrdinal("TeamID"));
                             teamInfo.TeamName = reader.IsDBNull(reader.GetOrdinal("TeamName")) ? string.Empty : reader.GetString(reader.GetOrdinal("TeamName"));
@@ -122,7 +121,7 @@ namespace CTFPrototype
             {
                 conn.Open();
 
-                // Begin a transaction
+                // Fetch points, update, and log the transaction
                 using (SqlTransaction transaction = conn.BeginTransaction())
                 {
                     try
@@ -205,22 +204,23 @@ namespace CTFPrototype
                         }
                         else
                         {
-                            // Handle the case where there is no result (e.g., invalid teamId)
+                            // Handle the case where there if no result
                             pointsLabel.Text = "Points: N/A";
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions, possibly log them and inform the user
+                    // Handle any exceptions, log and notify the user
                     MessageBox.Show($"An error occurred while retrieving points: {ex.Message}");
                 }
             }
         }
 
+        // Initialize timer
         private void StartTimer()
         {
-            countdownSeconds = 1800; // Reset countdown time to 30 minutes
+            countdownSeconds = 1800;
             countdownTimer.Start();
         }
 
@@ -241,7 +241,8 @@ namespace CTFPrototype
                 questionBox.Enabled = true;
                 answerBox.Enabled = true;
                 submitButton.Enabled = true;
-                // Remember to clear the answer text box each time
+
+                // Clear the answer text box each time
                 answerBox.Text = "";
 
                 // Show and start timer
@@ -259,6 +260,7 @@ namespace CTFPrototype
             }
         }
 
+        // Get random question from database
         private Question GetRandomQuestion(int categoryID)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -288,7 +290,7 @@ namespace CTFPrototype
             return null;
         }
 
-        // Define the Question class according to the table structure
+        // Define the Question class according to the table
         class Question
         {
             public int QuestionID { get; set; }
@@ -302,10 +304,10 @@ namespace CTFPrototype
         private Question currentQuestion;
         private void submitButton_Click(object sender, EventArgs e)
         {
-            string userAnswer = answerBox.Text.Trim(); // Get user's answer and trim it
+            string userAnswer = answerBox.Text.Trim();
 
             // Retrieve the current user's team information
-            TeamInfo userTeamInfo = GetTeamInfo(); // Fetches team info based on the class-level userID
+            TeamInfo userTeamInfo = GetTeamInfo(); 
 
             // Check if the answer is correct
             if (!string.IsNullOrEmpty(userAnswer) && userAnswer.Equals(currentQuestion.AnswerText, StringComparison.OrdinalIgnoreCase))
@@ -371,12 +373,6 @@ namespace CTFPrototype
 
         }
         
-        /*
-        private void StartCountdown()
-        {
-            countdownTimer.Start();
-        }
-        */
 
         private void CountdownTimer_Tick(object sender, EventArgs e)
         {
@@ -387,7 +383,7 @@ namespace CTFPrototype
             }
             else
             {
-                countdownTimer.Stop(); // Stop the timer when the countdown reaches zero
+                countdownTimer.Stop(); 
                 MessageBox.Show("Countdown is over!");
             }
         }
@@ -395,7 +391,7 @@ namespace CTFPrototype
         private void UpdateCountdownLabel()
         {
             // Update the Label to display the remaining time
-            TimeKeeper.Text = $"Time Left: {countdownSeconds} seconds";
+            TimeKeeper.Text = $"Time: {countdownSeconds} Seconds";
         }
 
         private void PointTracker_Click(object sender, EventArgs e)
@@ -426,6 +422,11 @@ namespace CTFPrototype
         {
             TeamRankingForm rankingForm = new TeamRankingForm();
             rankingForm.ShowDialog();
+        }
+
+        private void TimeKeeper_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

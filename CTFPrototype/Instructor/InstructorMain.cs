@@ -19,11 +19,23 @@ namespace CTFPrototype.Instructor
             InitializeComponent();
             this.loginForm = login;
             this.userID = userID;
+
+            // Terminate program when form closed
+            this.FormClosed += (sender, args) => Application.Exit();
         }
 
         private void InstructorMain_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            loginForm.ClearPassword();
+            loginForm.Show();
+
+            // Close the current (StudentMain) form
+            this.Hide();
         }
     }
 }

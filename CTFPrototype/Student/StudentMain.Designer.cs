@@ -107,6 +107,7 @@
             this.TimeKeeper.Size = new System.Drawing.Size(49, 14);
             this.TimeKeeper.TabIndex = 5;
             this.TimeKeeper.Text = "Time: 0";
+            this.TimeKeeper.Click += new System.EventHandler(this.TimeKeeper_Click);
             // 
             // pointsLabel
             // 
@@ -160,6 +161,7 @@
             // 
             // rankButton
             // 
+            this.rankButton.Enabled = false;
             this.rankButton.Location = new System.Drawing.Point(468, 433);
             this.rankButton.Name = "rankButton";
             this.rankButton.Size = new System.Drawing.Size(104, 35);
