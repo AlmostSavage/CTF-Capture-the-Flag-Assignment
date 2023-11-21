@@ -51,6 +51,7 @@
             this.passwordBox.PasswordChar = '*';
             this.passwordBox.Size = new System.Drawing.Size(295, 21);
             this.passwordBox.TabIndex = 1;
+            this.passwordBox.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.passwordBox_MaskInputRejected);
             // 
             // loginButton
             // 

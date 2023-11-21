@@ -12,6 +12,9 @@ namespace CTFPrototype.Instructor
 {
     public partial class InstructorMain : Form
     {
+        // Connect database
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+
         private readonly Login loginForm;
         private int userID;
         public InstructorMain(Login login, int userID)
@@ -36,6 +39,30 @@ namespace CTFPrototype.Instructor
 
             // Close the current (StudentMain) form
             this.Hide();
+        }
+
+        private void signupButton_Click(object sender, EventArgs e)
+        {
+            Signup signupForm = new Signup();
+            signupForm.ShowDialog();
+        }
+
+        private void viewTransactionButton_Click(object sender, EventArgs e)
+        {
+            TransactionViewForm transactionViewForm = new TransactionViewForm();
+            transactionViewForm.ShowDialog();
+        }
+
+        private void viewRankButton_Click(object sender, EventArgs e)
+        {
+            RankingViewForm rankingViewForm = new RankingViewForm();
+            rankingViewForm.ShowDialog();
+        }
+
+        private void viewQuestionsButton_Click(object sender, EventArgs e)
+        {
+            QuestionBankViewForm questionBankViewForm = new QuestionBankViewForm();
+            questionBankViewForm.ShowDialog();
         }
     }
 }

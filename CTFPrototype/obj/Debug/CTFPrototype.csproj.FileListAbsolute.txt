@@ -91,3 +91,6 @@ C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.application
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.csproj.Fody.CopyLocal.cache
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.csproj.Fody.RuntimeCopyLocal.cache
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.TransactionViewForm.resources
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.RankingViewForm.resources
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.QuestionBankViewForm.resources

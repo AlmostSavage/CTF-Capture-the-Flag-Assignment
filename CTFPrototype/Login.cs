@@ -16,9 +16,6 @@ namespace CTFPrototype
 {
     public partial class Login : Form
     {
-        private const string CorrectUsername = "admin";
-        private const string CorrectPassword = "password";
-
         public Login()
         {
             InitializeComponent();
@@ -111,6 +108,11 @@ namespace CTFPrototype
         }
 
         private void Login_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void passwordBox_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
 
         }
