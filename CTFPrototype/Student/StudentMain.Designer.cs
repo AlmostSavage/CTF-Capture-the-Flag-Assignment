@@ -42,6 +42,7 @@
             this.submitButton = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
             this.rankButton = new System.Windows.Forms.Button();
+            this.hintButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // forensicsButton
@@ -102,7 +103,7 @@
             // 
             this.TimeKeeper.AutoSize = true;
             this.TimeKeeper.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TimeKeeper.Location = new System.Drawing.Point(313, 444);
+            this.TimeKeeper.Location = new System.Drawing.Point(241, 444);
             this.TimeKeeper.Name = "TimeKeeper";
             this.TimeKeeper.Size = new System.Drawing.Size(49, 14);
             this.TimeKeeper.TabIndex = 5;
@@ -112,7 +113,7 @@
             // pointsLabel
             // 
             this.pointsLabel.AutoSize = true;
-            this.pointsLabel.Location = new System.Drawing.Point(87, 444);
+            this.pointsLabel.Location = new System.Drawing.Point(72, 444);
             this.pointsLabel.Name = "pointsLabel";
             this.pointsLabel.Size = new System.Drawing.Size(59, 12);
             this.pointsLabel.TabIndex = 6;
@@ -133,7 +134,7 @@
             // 
             // answerBox
             // 
-            this.answerBox.Location = new System.Drawing.Point(65, 346);
+            this.answerBox.Location = new System.Drawing.Point(65, 317);
             this.answerBox.Name = "answerBox";
             this.answerBox.Size = new System.Drawing.Size(528, 21);
             this.answerBox.TabIndex = 8;
@@ -141,7 +142,7 @@
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(618, 344);
+            this.submitButton.Location = new System.Drawing.Point(618, 315);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(75, 23);
             this.submitButton.TabIndex = 9;
@@ -170,11 +171,22 @@
             this.rankButton.UseVisualStyleBackColor = true;
             this.rankButton.Click += new System.EventHandler(this.rankButton_Click_1);
             // 
+            // hintButton
+            // 
+            this.hintButton.Location = new System.Drawing.Point(65, 365);
+            this.hintButton.Name = "hintButton";
+            this.hintButton.Size = new System.Drawing.Size(81, 34);
+            this.hintButton.TabIndex = 12;
+            this.hintButton.Text = "Hint (-5)";
+            this.hintButton.UseVisualStyleBackColor = true;
+            this.hintButton.Click += new System.EventHandler(this.hintButton_Click);
+            // 
             // StudentMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 518);
+            this.Controls.Add(this.hintButton);
             this.Controls.Add(this.rankButton);
             this.Controls.Add(this.logoutButton);
             this.Controls.Add(this.submitButton);
@@ -210,5 +222,6 @@
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.Button rankButton;
+        private System.Windows.Forms.Button hintButton;
     }
 }

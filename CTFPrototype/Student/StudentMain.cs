@@ -29,6 +29,8 @@ namespace CTFPrototype
         {
             InitializeComponent();
 
+            hintButton.Visible = false;
+
             this.loginForm = login;
             this.userID = userID;
             this.Load += new EventHandler(StudentMain_Load);
@@ -113,35 +115,46 @@ namespace CTFPrototype
             return teamInfo;
         }
 
-        public void AddPoints(int questionId, int teamID)
+        public void AddPoints(int questionId, int teamID, bool hintUsed)
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                // Fetch points, update, and log the transaction
+                // Start a database transaction
                 using (SqlTransaction transaction = conn.BeginTransaction())
                 {
                     try
                     {
-                        // Fetch points worth from the Questions table
-                        string fetchPointsQuery = "SELECT PointsWorth FROM Questions WHERE QuestionID = @QuestionId";
+                        // Fetch question details (including category name)
+                        string fetchQuestionDetailsQuery = @"
+                SELECT q.PointsWorth, c.CategoryName 
+                FROM Questions q 
+                INNER JOIN Categories c ON q.CategoryID = c.CategoryID 
+                WHERE q.QuestionID = @QuestionId";
+
                         int pointsToAdd = 0;
-                        using (SqlCommand cmd = new SqlCommand(fetchPointsQuery, conn, transaction))
+                        string categoryName = "";
+                        using (SqlCommand cmd = new SqlCommand(fetchQuestionDetailsQuery, conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@QuestionId", questionId);
-                            object result = cmd.ExecuteScalar();
-                            if (result != null)
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                pointsToAdd = Convert.ToInt32(result);
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException("Question ID not found.");
+                                if (reader.Read())
+                                {
+                                    pointsToAdd = reader.GetInt32(reader.GetOrdinal("PointsWorth"));
+                                    categoryName = reader.GetString(reader.GetOrdinal("CategoryName"));
+                                }
+                                else
+                                {
+                                    throw new InvalidOperationException("Question ID not found.");
+                                }
                             }
                         }
+
+                        // Deduct points if hint was used
+                        int deduction = hintUsed ? Math.Min(5, pointsToAdd) : 0;
+                        pointsToAdd -= deduction;
 
                         // Update the Teams table
                         string updatePointsQuery = "UPDATE Teams SET Points = Points + @pointsToAdd WHERE TeamID = @teamId";
@@ -152,12 +165,20 @@ namespace CTFPrototype
                             cmd.ExecuteNonQuery();
                         }
 
+                        // Construct the reason string
+                        string reason = $"User {userID} answered question {questionId} in category '{categoryName}'";
+                        if (hintUsed)
+                        {
+                            reason += " using a hint";
+                        }
+
                         // Insert a record into the ScoreTransactions table
-                        string insertTransactionQuery = "INSERT INTO ScoreTransactions (TeamID, PointsChanged, Reason) VALUES (@teamId, @pointsToAdd, 'Answered Question')";
+                        string insertTransactionQuery = "INSERT INTO ScoreTransactions (TeamID, PointsChanged, Reason) VALUES (@teamId, @pointsToAdd, @reason)";
                         using (SqlCommand cmd = new SqlCommand(insertTransactionQuery, conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@teamId", teamID);
                             cmd.Parameters.AddWithValue("@pointsToAdd", pointsToAdd);
+                            cmd.Parameters.AddWithValue("@reason", reason);
                             cmd.ExecuteNonQuery();
                         }
 
@@ -238,9 +259,11 @@ namespace CTFPrototype
                 questionBox.Visible = true;
                 answerBox.Visible = true;
                 submitButton.Visible = true;
+                hintButton.Visible = true;
                 questionBox.Enabled = true;
                 answerBox.Enabled = true;
                 submitButton.Enabled = true;
+                hintButton.Enabled = true;
 
                 // Clear the answer text box each time
                 answerBox.Text = "";
@@ -256,7 +279,11 @@ namespace CTFPrototype
                 questionBox.Enabled = false;
                 answerBox.Enabled = false;
                 submitButton.Enabled = false;
+                hintButton.Enabled = false;
                 MessageBox.Show("No more questions available for this category.");
+
+                // Stop timer
+                countdownTimer.Stop();
             }
         }
 
@@ -281,7 +308,9 @@ namespace CTFPrototype
                                 PointsWorth = reader.GetInt32(reader.GetOrdinal("PointsWorth")),
                                 DifficultyLevel = reader.GetInt32(reader.GetOrdinal("DifficultyLevel")),
                                 QuestionText = reader.GetString(reader.GetOrdinal("QuestionText")),
-                                AnswerText = reader.GetString(reader.GetOrdinal("AnswerText"))
+                                AnswerText = reader.GetString(reader.GetOrdinal("AnswerText")),
+                                HintText = reader.IsDBNull(reader.GetOrdinal("HintText")) ? string.Empty : reader.GetString(reader.GetOrdinal("HintText")),
+                                HintUsed = false
                             };
                         }
                     }
@@ -290,7 +319,7 @@ namespace CTFPrototype
             return null;
         }
 
-        // Define the Question class according to the table
+        // Define the Question class according to the table2
         class Question
         {
             public int QuestionID { get; set; }
@@ -299,6 +328,8 @@ namespace CTFPrototype
             public int DifficultyLevel { get; set; }
             public string QuestionText { get; set; }
             public string AnswerText { get; set; }
+            public string HintText { get; set; }
+            public bool HintUsed { get; set; }
         }
 
         private Question currentQuestion;
@@ -312,9 +343,18 @@ namespace CTFPrototype
             // Check if the answer is correct
             if (!string.IsNullOrEmpty(userAnswer) && userAnswer.Equals(currentQuestion.AnswerText, StringComparison.OrdinalIgnoreCase))
             {
+                // Calculate the adjusted points
+                int adjustedPoints = currentQuestion.PointsWorth;
+                if (currentQuestion.HintUsed)
+                {
+                    adjustedPoints = Math.Max(0, adjustedPoints - 5); // Assuming hint cost is 5 points
+                }
+
                 // Add points to the user's team score for the current question
-                AddPoints(currentQuestion.QuestionID, userTeamInfo.TeamID);
-                MessageBox.Show("Congratulations! You've earned " + currentQuestion.PointsWorth + " points.", "Correct Answer", MessageBoxButtons.OK);
+                AddPoints(currentQuestion.QuestionID, userTeamInfo.TeamID, currentQuestion.HintUsed);
+
+                // Show message with adjusted points
+                MessageBox.Show("Congratulations! You've earned " + adjustedPoints + " points.", "Correct Answer", MessageBoxButtons.OK);
 
                 // After closing the MessageBox, refresh the question
                 CategoryButton_Click(sender, e);
@@ -394,6 +434,7 @@ namespace CTFPrototype
             TimeKeeper.Text = $"Time: {countdownSeconds} Seconds";
         }
 
+
         private void PointTracker_Click(object sender, EventArgs e)
         {
 
@@ -427,6 +468,14 @@ namespace CTFPrototype
         private void TimeKeeper_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void hintButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(currentQuestion.HintText);
+
+            // Indicate that a hint was used
+            currentQuestion.HintUsed = true;
         }
     }
 }
