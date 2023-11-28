@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CTFPrototype.exe" size="8200616">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CTFPrototype.exe" size="8203176">
       <assemblyIdentity name="CTFPrototype" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mBrbcs09Vj5en3ZMqIaLdSV5ygIC1g950uoH4oL4pHk=</dsig:DigestValue>
+        <dsig:DigestValue>pzIMIaRNd941qDeb0ymHmJk21w4NI6lbHB0nYVTotmM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -206,7 +206,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>n2vJ9W6MtU82/BcjrTS58oazBYE2bGRQyycMj5ADteA=</dsig:DigestValue>
+      <dsig:DigestValue>7UEcmkZzp2Zc53mLxlSBGGgKnIdXIWY5aywmugX7bf4=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Database_log.ldf" size="8388608" writeableType="applicationData">
@@ -215,7 +215,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>6ph0+QbHePP4wXrFKw0svlcb844fFqyStly9qxN06UI=</dsig:DigestValue>
+      <dsig:DigestValue>PhecUtufaP/nGAeu7TerfAQsNi5bhoH34Kp1We9A1kY=</dsig:DigestValue>
     </hash>
   </file>
   <file name="libHarfBuzzSharp.dylib" size="2683424">

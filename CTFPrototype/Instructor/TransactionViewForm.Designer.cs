@@ -35,10 +35,11 @@
             // transactionGrid
             // 
             this.transactionGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.transactionGrid.Location = new System.Drawing.Point(12, 12);
+            this.transactionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.transactionGrid.Location = new System.Drawing.Point(0, 0);
             this.transactionGrid.Name = "transactionGrid";
             this.transactionGrid.RowTemplate.Height = 23;
-            this.transactionGrid.Size = new System.Drawing.Size(776, 426);
+            this.transactionGrid.Size = new System.Drawing.Size(800, 450);
             this.transactionGrid.TabIndex = 0;
             this.transactionGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 

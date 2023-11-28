@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using CTFPrototype.Instructor;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,9 @@ namespace CTFPrototype
     {
         // Connect database
         string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+
+        private List<Question> questionsInCategory;
+        private int currentQuestionIndex = -1;
 
         private int points = 0;
         private readonly Login loginForm;
@@ -79,18 +83,19 @@ namespace CTFPrototype
             public int TeamID;
             public string TeamName;
             public int Points;
+            public string Username;
         }
 
         private TeamInfo GetTeamInfo()
         {
-            TeamInfo teamInfo = new TeamInfo { TeamID = -1, TeamName = string.Empty, Points = 0 };
+            TeamInfo teamInfo = new TeamInfo { TeamID = -1, TeamName = string.Empty, Points = 0, Username = string.Empty };
 
-            // Fetch the TeamID, TeamName, and Points for the current user's team.
+            // Modified query to fetch the Username as well
             string query = @"
-            SELECT t.TeamID, t.TeamName, t.Points 
-            FROM Users u 
-            INNER JOIN Teams t ON u.TeamID = t.TeamID 
-            WHERE u.UserID = @UserId";
+    SELECT t.TeamID, t.TeamName, t.Points, u.Username 
+    FROM Users u 
+    INNER JOIN Teams t ON u.TeamID = t.TeamID 
+    WHERE u.UserID = @UserId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -107,6 +112,7 @@ namespace CTFPrototype
                             teamInfo.TeamID = reader.IsDBNull(reader.GetOrdinal("TeamID")) ? -1 : reader.GetInt32(reader.GetOrdinal("TeamID"));
                             teamInfo.TeamName = reader.IsDBNull(reader.GetOrdinal("TeamName")) ? string.Empty : reader.GetString(reader.GetOrdinal("TeamName"));
                             teamInfo.Points = reader.IsDBNull(reader.GetOrdinal("Points")) ? 0 : reader.GetInt32(reader.GetOrdinal("Points"));
+                            teamInfo.Username = reader.IsDBNull(reader.GetOrdinal("Username")) ? string.Empty : reader.GetString(reader.GetOrdinal("Username"));
                         }
                     }
                 }
@@ -251,41 +257,13 @@ namespace CTFPrototype
             Button clickedButton = sender as Button;
             int categoryID = Convert.ToInt32(clickedButton.Tag);
 
-            currentQuestion = GetRandomQuestion(categoryID);
-            Question question = GetRandomQuestion(categoryID);
-            if (question != null)
-            {
-                questionBox.Text = question.QuestionText;
-                questionBox.Visible = true;
-                answerBox.Visible = true;
-                submitButton.Visible = true;
-                hintButton.Visible = true;
-                questionBox.Enabled = true;
-                answerBox.Enabled = true;
-                submitButton.Enabled = true;
-                hintButton.Enabled = true;
-
-                // Clear the answer text box each time
-                answerBox.Text = "";
-
-                // Show and start timer
-                TimeKeeper.Visible = true;
-                StartTimer();
-            }
-            else
-            {
-                questionBox.Text = "";
-                answerBox.Text = "";
-                questionBox.Enabled = false;
-                answerBox.Enabled = false;
-                submitButton.Enabled = false;
-                hintButton.Enabled = false;
-                MessageBox.Show("No more questions available for this category.");
-
-                // Stop timer
-                countdownTimer.Stop();
-            }
+            LoadQuestionsForCategory(categoryID);
+            UpdateAnsweredQuestions(userID, categoryID);
+            DisplayCurrentQuestion();
         }
+
+        // Get dict to store asked question
+        private Dictionary<int, HashSet<int>> askedQuestions = new Dictionary<int, HashSet<int>>();
 
         // Get random question from database
         private Question GetRandomQuestion(int categoryID)
@@ -310,6 +288,7 @@ namespace CTFPrototype
                                 QuestionText = reader.GetString(reader.GetOrdinal("QuestionText")),
                                 AnswerText = reader.GetString(reader.GetOrdinal("AnswerText")),
                                 HintText = reader.IsDBNull(reader.GetOrdinal("HintText")) ? string.Empty : reader.GetString(reader.GetOrdinal("HintText")),
+                                HintWorth = reader.GetInt32(reader.GetOrdinal("HintWorth")),
                                 HintUsed = false
                             };
                         }
@@ -330,6 +309,187 @@ namespace CTFPrototype
             public string AnswerText { get; set; }
             public string HintText { get; set; }
             public bool HintUsed { get; set; }
+            public int HintWorth { get; set; }
+            public bool AnsweredCorrectly { get; set; }
+        }
+
+
+        private void LoadQuestionsForCategory(int categoryID)
+        {
+            questionsInCategory = new List<Question>();
+            currentQuestionIndex = -1;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Questions WHERE CategoryID = @CategoryID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CategoryID", categoryID);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            questionsInCategory.Add(new Question
+                            {
+                                QuestionID = reader.GetInt32(reader.GetOrdinal("QuestionID")),
+                                CategoryID = categoryID,
+                                PointsWorth = reader.GetInt32(reader.GetOrdinal("PointsWorth")),
+                                DifficultyLevel = reader.GetInt32(reader.GetOrdinal("DifficultyLevel")),
+                                QuestionText = reader.GetString(reader.GetOrdinal("QuestionText")),
+                                AnswerText = reader.GetString(reader.GetOrdinal("AnswerText")),
+                                HintText = reader.IsDBNull(reader.GetOrdinal("HintText")) ? string.Empty : reader.GetString(reader.GetOrdinal("HintText")),
+                                HintWorth = reader.GetInt32(reader.GetOrdinal("HintWorth")),
+                                HintUsed = false,
+                                AnsweredCorrectly = false
+                            });
+                        }
+                    }
+                }
+            }
+
+            if (questionsInCategory.Count > 0)
+            {
+                currentQuestionIndex = 0; // Set to the first question
+                DisplayCurrentQuestion();
+            }
+        }
+
+        private void LoadNextQuestion()
+        {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questionsInCategory.Count)
+            {
+                currentQuestion = questionsInCategory[currentQuestionIndex];
+                DisplayCurrentQuestion();
+            }
+            else
+            {
+                MessageBox.Show("No more questions available in this category.");
+                // Handle end of questions scenario
+            }
+        }
+
+        private void UpdateAnsweredQuestions(int userID, int categoryID)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"
+            SELECT QuestionID 
+            FROM UserQuestionAnswers 
+            WHERE UserID = @UserID AND AnsweredCorrectly = 1";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@UserID", userID);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int questionID = reader.GetInt32(0);
+                            var question = questionsInCategory.FirstOrDefault(q => q.QuestionID == questionID);
+                            if (question != null)
+                            {
+                                question.AnsweredCorrectly = true;
+                                question.HintUsed = true; // Assume hint used if answered correctly
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DisplayCurrentQuestion()
+        {
+            if (currentQuestionIndex >= 0 && currentQuestionIndex < questionsInCategory.Count)
+            {
+                currentQuestion = questionsInCategory[currentQuestionIndex];
+
+                questionBox.Visible = true;
+                answerBox.Visible = true;
+                previousButton.Visible = true;
+                nextButton.Visible = true;
+                submitButton.Visible = true;
+                hintButton.Visible = true;
+
+                previousButton.Enabled = currentQuestionIndex > 0;
+                nextButton.Enabled = currentQuestionIndex < questionsInCategory.Count - 1;
+
+                questionBox.Text = currentQuestion.QuestionText;
+                answerBox.Text = "";
+                answerBox.Enabled = !currentQuestion.AnsweredCorrectly;
+                submitButton.Enabled = !currentQuestion.AnsweredCorrectly;
+                hintButton.Enabled = !(currentQuestion.AnsweredCorrectly || currentQuestion.HintUsed);
+
+                hintButton.Enabled = !currentQuestion.HintUsed;
+
+                TimeKeeper.Visible = true;
+                StartTimer();
+            }
+            else
+            {
+                MessageBox.Show("No more questions available in this category.");
+
+                // Reset and disable question and answer fields
+                questionBox.Text = "";
+                answerBox.Text = "";
+                questionBox.Enabled = false;
+                answerBox.Enabled = false;
+                submitButton.Enabled = false;
+                hintButton.Enabled = false;
+
+                previousButton.Enabled = false;
+                nextButton.Enabled = false;
+
+
+
+                countdownTimer.Stop();
+            }
+        }
+
+        private void LogCorrectAnswer(int userID, int questionID)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                // Check if the record already exists
+                string checkQuery = @"
+            SELECT COUNT(1) 
+            FROM UserQuestionAnswers 
+            WHERE UserID = @UserID AND QuestionID = @QuestionID";
+
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@UserID", userID);
+                    checkCmd.Parameters.AddWithValue("@QuestionID", questionID);
+                    int count = (int)checkCmd.ExecuteScalar();
+
+                    // If record exists, update, otherwise insert
+                    string sqlQuery;
+                    if (count > 0)
+                    {
+                        sqlQuery = @"
+                    UPDATE UserQuestionAnswers 
+                    SET AnsweredCorrectly = 1 
+                    WHERE UserID = @UserID AND QuestionID = @QuestionID";
+                    }
+                    else
+                    {
+                        sqlQuery = @"
+                    INSERT INTO UserQuestionAnswers (UserID, QuestionID, AnsweredCorrectly) 
+                    VALUES (@UserID, @QuestionID, 1)";
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand(sqlQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", userID);
+                        cmd.Parameters.AddWithValue("@QuestionID", questionID);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
         }
 
         private Question currentQuestion;
@@ -338,16 +498,22 @@ namespace CTFPrototype
             string userAnswer = answerBox.Text.Trim();
 
             // Retrieve the current user's team information
-            TeamInfo userTeamInfo = GetTeamInfo(); 
+            TeamInfo userTeamInfo = GetTeamInfo();
 
             // Check if the answer is correct
             if (!string.IsNullOrEmpty(userAnswer) && userAnswer.Equals(currentQuestion.AnswerText, StringComparison.OrdinalIgnoreCase))
             {
+                currentQuestion.AnsweredCorrectly = true;
+
+                // Log correct answered question into database
+                LogCorrectAnswer(userID, currentQuestion.QuestionID);
+
                 // Calculate the adjusted points
                 int adjustedPoints = currentQuestion.PointsWorth;
                 if (currentQuestion.HintUsed)
                 {
-                    adjustedPoints = Math.Max(0, adjustedPoints - 5); // Assuming hint cost is 5 points
+                    // Subtract the hint worth from the points
+                    adjustedPoints = Math.Max(0, adjustedPoints - currentQuestion.HintWorth);
                 }
 
                 // Add points to the user's team score for the current question
@@ -356,8 +522,11 @@ namespace CTFPrototype
                 // Show message with adjusted points
                 MessageBox.Show("Congratulations! You've earned " + adjustedPoints + " points.", "Correct Answer", MessageBoxButtons.OK);
 
-                // After closing the MessageBox, refresh the question
-                CategoryButton_Click(sender, e);
+                answerBox.Enabled = false;
+                submitButton.Enabled = false;
+                hintButton.Enabled = false;
+
+                answerBox.Text = "";
             }
             else
             {
@@ -461,8 +630,8 @@ namespace CTFPrototype
 
         private void rankButton_Click_1(object sender, EventArgs e)
         {
-            TeamRankingForm rankingForm = new TeamRankingForm();
-            rankingForm.ShowDialog();
+            RankingViewForm rankingViewForm = new RankingViewForm();
+            rankingViewForm.ShowDialog();
         }
 
         private void TimeKeeper_Click(object sender, EventArgs e)
@@ -472,10 +641,37 @@ namespace CTFPrototype
 
         private void hintButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(currentQuestion.HintText);
+            if (currentQuestion != null)
+            {
+                MessageBox.Show(currentQuestion.HintText);
+                currentQuestion.HintUsed = true;
+                hintButton.Enabled = false;
+            }
+        }
 
-            // Indicate that a hint was used
-            currentQuestion.HintUsed = true;
+        private void welcomeLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void previousButton_Click(object sender, EventArgs e)
+        {
+            if (currentQuestionIndex > 0)
+            {
+                currentQuestionIndex--;
+                UpdateAnsweredQuestions(userID, currentQuestion.CategoryID);
+                DisplayCurrentQuestion();
+            }
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            if (currentQuestionIndex < questionsInCategory.Count - 1)
+            {
+                currentQuestionIndex++;
+                UpdateAnsweredQuestions(userID, currentQuestion.CategoryID);
+                DisplayCurrentQuestion();
+            }
         }
     }
 }

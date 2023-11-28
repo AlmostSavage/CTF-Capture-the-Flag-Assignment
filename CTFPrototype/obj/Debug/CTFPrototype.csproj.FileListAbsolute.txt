@@ -65,7 +65,6 @@ C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\BCrypt.Net-Next.xml
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Signup.resources
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.InstructorMain.resources
-C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.TeamRankingForm.resources
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\libHarfBuzzSharp.dylib
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\x86\libHarfBuzzSharp.dll
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\x64\libHarfBuzzSharp.dll
@@ -89,8 +88,8 @@ C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\bin\Debug\CTFPrototype.application
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.exe.manifest
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.application
-C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.csproj.Fody.CopyLocal.cache
-C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.csproj.Fody.RuntimeCopyLocal.cache
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.TransactionViewForm.resources
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.RankingViewForm.resources
 C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.Instructor.QuestionBankViewForm.resources
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.csproj.Fody.CopyLocal.cache
+C:\Users\xuh\source\repos\CTF-Capture-the-Flag-Assignment\CTFPrototype\obj\Debug\CTFPrototype.csproj.Fody.RuntimeCopyLocal.cache
