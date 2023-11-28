@@ -43,11 +43,13 @@
             this.logoutButton = new System.Windows.Forms.Button();
             this.rankButton = new System.Windows.Forms.Button();
             this.hintButton = new System.Windows.Forms.Button();
+            this.previousButton = new System.Windows.Forms.Button();
+            this.nextButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // forensicsButton
             // 
-            this.forensicsButton.Location = new System.Drawing.Point(15, 67);
+            this.forensicsButton.Location = new System.Drawing.Point(15, 46);
             this.forensicsButton.Name = "forensicsButton";
             this.forensicsButton.Size = new System.Drawing.Size(125, 46);
             this.forensicsButton.TabIndex = 0;
@@ -57,7 +59,7 @@
             // 
             // cryptographyButton
             // 
-            this.cryptographyButton.Location = new System.Drawing.Point(165, 67);
+            this.cryptographyButton.Location = new System.Drawing.Point(165, 46);
             this.cryptographyButton.Name = "cryptographyButton";
             this.cryptographyButton.Size = new System.Drawing.Size(125, 46);
             this.cryptographyButton.TabIndex = 1;
@@ -67,7 +69,7 @@
             // 
             // webButton
             // 
-            this.webButton.Location = new System.Drawing.Point(313, 67);
+            this.webButton.Location = new System.Drawing.Point(313, 46);
             this.webButton.Name = "webButton";
             this.webButton.Size = new System.Drawing.Size(125, 46);
             this.webButton.TabIndex = 2;
@@ -77,7 +79,7 @@
             // 
             // reverseButton
             // 
-            this.reverseButton.Location = new System.Drawing.Point(618, 67);
+            this.reverseButton.Location = new System.Drawing.Point(618, 46);
             this.reverseButton.Name = "reverseButton";
             this.reverseButton.Size = new System.Drawing.Size(125, 46);
             this.reverseButton.TabIndex = 3;
@@ -87,7 +89,7 @@
             // 
             // binaryButton
             // 
-            this.binaryButton.Location = new System.Drawing.Point(468, 67);
+            this.binaryButton.Location = new System.Drawing.Point(468, 46);
             this.binaryButton.Name = "binaryButton";
             this.binaryButton.Size = new System.Drawing.Size(125, 46);
             this.binaryButton.TabIndex = 4;
@@ -103,7 +105,7 @@
             // 
             this.TimeKeeper.AutoSize = true;
             this.TimeKeeper.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TimeKeeper.Location = new System.Drawing.Point(241, 444);
+            this.TimeKeeper.Location = new System.Drawing.Point(241, 423);
             this.TimeKeeper.Name = "TimeKeeper";
             this.TimeKeeper.Size = new System.Drawing.Size(49, 14);
             this.TimeKeeper.TabIndex = 5;
@@ -113,7 +115,7 @@
             // pointsLabel
             // 
             this.pointsLabel.AutoSize = true;
-            this.pointsLabel.Location = new System.Drawing.Point(72, 444);
+            this.pointsLabel.Location = new System.Drawing.Point(72, 423);
             this.pointsLabel.Name = "pointsLabel";
             this.pointsLabel.Size = new System.Drawing.Size(59, 12);
             this.pointsLabel.TabIndex = 6;
@@ -123,7 +125,8 @@
             // questionBox
             // 
             this.questionBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.questionBox.Location = new System.Drawing.Point(65, 161);
+            this.questionBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.questionBox.Location = new System.Drawing.Point(65, 140);
             this.questionBox.Multiline = true;
             this.questionBox.Name = "questionBox";
             this.questionBox.ReadOnly = true;
@@ -134,7 +137,7 @@
             // 
             // answerBox
             // 
-            this.answerBox.Location = new System.Drawing.Point(65, 317);
+            this.answerBox.Location = new System.Drawing.Point(65, 296);
             this.answerBox.Name = "answerBox";
             this.answerBox.Size = new System.Drawing.Size(528, 21);
             this.answerBox.TabIndex = 8;
@@ -142,7 +145,7 @@
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(618, 315);
+            this.submitButton.Location = new System.Drawing.Point(618, 294);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(75, 23);
             this.submitButton.TabIndex = 9;
@@ -152,7 +155,7 @@
             // 
             // logoutButton
             // 
-            this.logoutButton.Location = new System.Drawing.Point(649, 433);
+            this.logoutButton.Location = new System.Drawing.Point(649, 412);
             this.logoutButton.Name = "logoutButton";
             this.logoutButton.Size = new System.Drawing.Size(94, 35);
             this.logoutButton.TabIndex = 10;
@@ -162,8 +165,7 @@
             // 
             // rankButton
             // 
-            this.rankButton.Enabled = false;
-            this.rankButton.Location = new System.Drawing.Point(468, 433);
+            this.rankButton.Location = new System.Drawing.Point(468, 412);
             this.rankButton.Name = "rankButton";
             this.rankButton.Size = new System.Drawing.Size(104, 35);
             this.rankButton.TabIndex = 11;
@@ -173,7 +175,7 @@
             // 
             // hintButton
             // 
-            this.hintButton.Location = new System.Drawing.Point(65, 365);
+            this.hintButton.Location = new System.Drawing.Point(65, 344);
             this.hintButton.Name = "hintButton";
             this.hintButton.Size = new System.Drawing.Size(81, 34);
             this.hintButton.TabIndex = 12;
@@ -181,11 +183,37 @@
             this.hintButton.UseVisualStyleBackColor = true;
             this.hintButton.Click += new System.EventHandler(this.hintButton_Click);
             // 
+            // previousButton
+            // 
+            this.previousButton.Enabled = false;
+            this.previousButton.Location = new System.Drawing.Point(417, 344);
+            this.previousButton.Name = "previousButton";
+            this.previousButton.Size = new System.Drawing.Size(81, 34);
+            this.previousButton.TabIndex = 13;
+            this.previousButton.Text = "Previous";
+            this.previousButton.UseVisualStyleBackColor = true;
+            this.previousButton.Visible = false;
+            this.previousButton.Click += new System.EventHandler(this.previousButton_Click);
+            // 
+            // nextButton
+            // 
+            this.nextButton.Enabled = false;
+            this.nextButton.Location = new System.Drawing.Point(551, 344);
+            this.nextButton.Name = "nextButton";
+            this.nextButton.Size = new System.Drawing.Size(81, 34);
+            this.nextButton.TabIndex = 14;
+            this.nextButton.Text = "Next";
+            this.nextButton.UseVisualStyleBackColor = true;
+            this.nextButton.Visible = false;
+            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
+            // 
             // StudentMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 518);
+            this.Controls.Add(this.nextButton);
+            this.Controls.Add(this.previousButton);
             this.Controls.Add(this.hintButton);
             this.Controls.Add(this.rankButton);
             this.Controls.Add(this.logoutButton);
@@ -223,5 +251,7 @@
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.Button rankButton;
         private System.Windows.Forms.Button hintButton;
+        private System.Windows.Forms.Button previousButton;
+        private System.Windows.Forms.Button nextButton;
     }
 }

@@ -34,11 +34,13 @@
             // 
             // questionsGrid
             // 
+            this.questionsGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.questionsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.questionsGrid.Location = new System.Drawing.Point(12, 12);
+            this.questionsGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.questionsGrid.Location = new System.Drawing.Point(0, 0);
             this.questionsGrid.Name = "questionsGrid";
             this.questionsGrid.RowTemplate.Height = 23;
-            this.questionsGrid.Size = new System.Drawing.Size(776, 426);
+            this.questionsGrid.Size = new System.Drawing.Size(1018, 450);
             this.questionsGrid.TabIndex = 0;
             this.questionsGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -46,7 +48,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1018, 450);
             this.Controls.Add(this.questionsGrid);
             this.Name = "QuestionBankViewForm";
             this.Text = "QuestionBankViewForm";

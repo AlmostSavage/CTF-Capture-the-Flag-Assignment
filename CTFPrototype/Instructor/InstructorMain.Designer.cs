@@ -37,7 +37,7 @@
             // 
             // logoutButton
             // 
-            this.logoutButton.Location = new System.Drawing.Point(604, 361);
+            this.logoutButton.Location = new System.Drawing.Point(218, 277);
             this.logoutButton.Name = "logoutButton";
             this.logoutButton.Size = new System.Drawing.Size(75, 23);
             this.logoutButton.TabIndex = 0;
@@ -47,7 +47,7 @@
             // 
             // viewTransactionButton
             // 
-            this.viewTransactionButton.Location = new System.Drawing.Point(105, 106);
+            this.viewTransactionButton.Location = new System.Drawing.Point(45, 51);
             this.viewTransactionButton.Name = "viewTransactionButton";
             this.viewTransactionButton.Size = new System.Drawing.Size(172, 44);
             this.viewTransactionButton.TabIndex = 1;
@@ -57,7 +57,7 @@
             // 
             // signupButton
             // 
-            this.signupButton.Location = new System.Drawing.Point(407, 106);
+            this.signupButton.Location = new System.Drawing.Point(301, 51);
             this.signupButton.Name = "signupButton";
             this.signupButton.Size = new System.Drawing.Size(172, 44);
             this.signupButton.TabIndex = 2;
@@ -67,7 +67,7 @@
             // 
             // viewRankButton
             // 
-            this.viewRankButton.Location = new System.Drawing.Point(105, 233);
+            this.viewRankButton.Location = new System.Drawing.Point(45, 146);
             this.viewRankButton.Name = "viewRankButton";
             this.viewRankButton.Size = new System.Drawing.Size(172, 44);
             this.viewRankButton.TabIndex = 3;
@@ -77,7 +77,7 @@
             // 
             // viewQuestionsButton
             // 
-            this.viewQuestionsButton.Location = new System.Drawing.Point(407, 233);
+            this.viewQuestionsButton.Location = new System.Drawing.Point(301, 146);
             this.viewQuestionsButton.Name = "viewQuestionsButton";
             this.viewQuestionsButton.Size = new System.Drawing.Size(172, 44);
             this.viewQuestionsButton.TabIndex = 4;
@@ -89,7 +89,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(505, 345);
             this.Controls.Add(this.viewQuestionsButton);
             this.Controls.Add(this.viewRankButton);
             this.Controls.Add(this.signupButton);

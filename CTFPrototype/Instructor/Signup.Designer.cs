@@ -71,7 +71,7 @@
             // 
             // signupButton
             // 
-            this.signupButton.Location = new System.Drawing.Point(522, 175);
+            this.signupButton.Location = new System.Drawing.Point(222, 292);
             this.signupButton.Name = "signupButton";
             this.signupButton.Size = new System.Drawing.Size(75, 34);
             this.signupButton.TabIndex = 4;
@@ -83,7 +83,7 @@
             // 
             this.teamList.FormattingEnabled = true;
             this.teamList.ItemHeight = 12;
-            this.teamList.Location = new System.Drawing.Point(125, 175);
+            this.teamList.Location = new System.Drawing.Point(125, 193);
             this.teamList.Name = "teamList";
             this.teamList.Size = new System.Drawing.Size(316, 64);
             this.teamList.TabIndex = 5;
@@ -92,7 +92,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 363);
+            this.ClientSize = new System.Drawing.Size(515, 363);
             this.Controls.Add(this.teamList);
             this.Controls.Add(this.signupButton);
             this.Controls.Add(this.label2);

@@ -362,10 +362,10 @@
     <Compile Include="Instructor\QuestionBankViewForm.Designer.cs">
       <DependentUpon>QuestionBankViewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Instructor\RankingViewForm.cs">
+    <Compile Include="RankingViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Instructor\RankingViewForm.Designer.cs">
+    <Compile Include="RankingViewForm.Designer.cs">
       <DependentUpon>RankingViewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Instructor\TransactionViewForm.cs">
@@ -373,12 +373,6 @@
     </Compile>
     <Compile Include="Instructor\TransactionViewForm.Designer.cs">
       <DependentUpon>TransactionViewForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TeamRankingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TeamRankingForm.Designer.cs">
-      <DependentUpon>TeamRankingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Instructor\InstructorMain.cs">
       <SubType>Form</SubType>
@@ -412,7 +406,7 @@
     <EmbeddedResource Include="Instructor\QuestionBankViewForm.resx">
       <DependentUpon>QuestionBankViewForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Instructor\RankingViewForm.resx">
+    <EmbeddedResource Include="RankingViewForm.resx">
       <DependentUpon>RankingViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Instructor\TransactionViewForm.resx">
@@ -435,9 +429,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Student\StudentMain.resx">
       <DependentUpon>StudentMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TeamRankingForm.resx">
-      <DependentUpon>TeamRankingForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="CTFPrototype_TemporaryKey.pfx" />
     <None Include="OpenTK.dll.config" />
